@@ -116,6 +116,80 @@
   .room-badge { text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 22px; }
   .room-badge em { color: var(--yellow); font-style: normal; }
 
+  /* ── PLAYER SELECT ── */
+  #playerSelectScreen {
+    display: none;
+    width: 340px;
+    background: var(--card);
+    border-radius: 22px;
+    padding: 34px 28px 30px;
+    box-shadow: 0 0 0 1px var(--border), 0 20px 60px rgba(0,0,0,.7);
+  }
+  #playerSelectScreen h2 {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  #playerSelectScreen .ps-sub {
+    text-align: center;
+    font-size: .78rem;
+    color: var(--muted);
+    margin-bottom: 22px;
+  }
+  #playerSelectScreen .ps-room {
+    text-align: center;
+    font-size: .85rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  #playerSelectScreen .ps-room em { color: var(--yellow); font-style: normal; font-weight: 700; }
+  .player-pick-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .player-pick-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 10px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--card2);
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .1s, box-shadow .15s;
+    position: relative;
+  }
+  .player-pick-btn:hover:not(.taken) {
+    transform: scale(1.04);
+  }
+  .player-pick-btn.taken {
+    opacity: .4;
+    cursor: not-allowed;
+  }
+  .player-pick-btn .pick-emoji { font-size: 2rem; }
+  .player-pick-btn .pick-name { font-size: .95rem; font-weight: 900; }
+  .player-pick-btn .pick-status {
+    font-size: .7rem;
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .player-pick-btn .taken-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    font-size: .65rem;
+    background: var(--red);
+    color: #fff;
+    border-radius: 6px;
+    padding: 2px 6px;
+    font-weight: 700;
+  }
+  .ps-back { display: flex; justify-content: center; }
+
   /* ── GAME ── */
   #game { display: none; width: 100%; max-width: 640px; }
 
@@ -294,6 +368,18 @@
   <div class="error-msg" id="pwErr"></div>
 </div>
 
+<!-- PLAYER SELECT -->
+<div id="playerSelectScreen">
+  <h2>選擇你的角色</h2>
+  <p class="ps-sub">點選你要扮演的玩家</p>
+  <div class="ps-room">房號：<em id="psRoomNum"></em></div>
+  <div class="player-pick-grid" id="playerPickGrid"></div>
+  <div class="ps-back">
+    <button class="btn grey" style="font-size:.85rem;padding:8px 20px" onclick="showSetup()">← 返回</button>
+  </div>
+  <div class="error-msg" id="psErr"></div>
+</div>
+
 <!-- GAME -->
 <div id="game">
   <div class="game-header">
@@ -353,28 +439,21 @@ let pingTimer     = null;
 
 const $ = id => document.getElementById(id);
 
-// Auto-init Firebase on page load
-window.addEventListener('DOMContentLoaded', () => { ensureFirebase(); });
-
 function showLoading(msg='連線中…'){ $('loadingMsg').textContent=msg; $('loadingOverlay').classList.add('show'); }
 function hideLoading(){ $('loadingOverlay').classList.remove('show'); }
 function makeGrid(r,c){ return Array.from({length:r},()=>Array(c).fill(0)); }
 
-// ── Init Firebase once (safe re-init) ──
+// ── Init Firebase once ──
 function ensureFirebase(){
   if(db) return true;
   try{
-    // Check if already initialized to avoid duplicate-app error
-    const existing = firebase.apps.find(a => a.name === 'teamtool');
-    if(existing){
-      firebaseApp = existing;
-    } else {
-      firebaseApp = firebase.initializeApp(FB_CONFIG, 'teamtool');
-    }
+    // compat SDK: firebase.apps is an array, check length or filter by name
+    const existing = firebase.apps.filter(a => a.name === 'teamtool')[0];
+    firebaseApp = existing || firebase.initializeApp(FB_CONFIG, 'teamtool');
     db = firebase.database(firebaseApp);
     return true;
   }catch(e){
-    $('setupErr').textContent = 'Firebase 連線失敗：'+e.message;
+    $('setupErr').textContent = 'Firebase 連線失敗：' + e.message;
     console.error('Firebase init error:', e);
     return false;
   }
@@ -391,7 +470,8 @@ async function doCreate(){
   try{
     await db.ref('rooms/'+roomNum).set(init);
     hideLoading();
-    enterGame(roomNum, 1);
+    myRoom = roomNum;
+    showPlayerSelect(roomNum, init);
   }catch(e){
     hideLoading();
     $('setupErr').textContent='建立失敗：'+e.message;
@@ -426,6 +506,7 @@ function showPwScreen(room){
 }
 function showSetup(){
   $('pwScreen').style.display='none';
+  $('playerSelectScreen').style.display='none';
   $('setupScreen').style.display='block';
 }
 
@@ -447,12 +528,53 @@ async function doPwSubmit(){
 }
 
 async function assignAndEnter(room, data){
+  // Show player selection screen instead of auto-assigning
+  showPlayerSelect(room, data);
+}
+
+function showPlayerSelect(room, data){
+  const NAMES  = ['玩家 1','玩家 2','玩家 3','玩家 4'];
+  const COLBG  = ['#173320','#3a2510','#0e2445','#2e1e38'];
+  const COLBDR = ['#4caf50','#c89060','#4a9eff','#a07ab0'];
+
+  $('setupScreen').style.display='none';
+  $('pwScreen').style.display='none';
+  $('psRoomNum').textContent = room;
+  $('psErr').textContent = '';
+
   const now    = Date.now();
-  const taken  = Object.keys(data.players||{}).map(Number);
-  const active = taken.filter(p => data.players[p] && (now-data.players[p])<OFFLINE_AFTER);
-  let pid=1;
-  for(let i=1;i<=4;i++){ if(!active.includes(i)){ pid=i; break; } }
-  enterGame(room, pid);
+  const players = data.players || {};
+  // who is actively online
+  const active = Object.keys(players).map(Number).filter(p => players[p] && (now - players[p]) < OFFLINE_AFTER);
+
+  const grid = $('playerPickGrid');
+  grid.innerHTML = '';
+
+  for(let p=1; p<=4; p++){
+    const isTaken = active.includes(p);
+    const btn = document.createElement('div');
+    btn.className = 'player-pick-btn' + (isTaken ? ' taken' : '');
+    btn.style.borderColor = isTaken ? 'var(--border)' : COLBDR[p-1];
+    btn.style.background  = isTaken ? 'var(--card2)' : COLBG[p-1];
+    if(!isTaken) btn.style.boxShadow = `0 0 16px ${COLBDR[p-1]}33`;
+
+    btn.innerHTML = `
+      ${isTaken ? '<span class="taken-badge">使用中</span>' : ''}
+      <span class="pick-emoji">${['😀','😎','🤖','👾'][p-1]}</span>
+      <span class="pick-name" style="color:${COLBDR[p-1]}">${NAMES[p-1]}</span>
+      <span class="pick-status">${isTaken ? '已有人使用' : '點選加入'}</span>
+    `;
+
+    if(!isTaken){
+      btn.onclick = () => {
+        $('playerSelectScreen').style.display='none';
+        enterGame(room, p);
+      };
+    }
+    grid.appendChild(btn);
+  }
+
+  $('playerSelectScreen').style.display='block';
 }
 
 // ── Enter game ──
