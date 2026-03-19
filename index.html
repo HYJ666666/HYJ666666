@@ -8,20 +8,21 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap');
 
   :root {
-    --bg: #1a1d23;
-    --card: #252930;
-    --card2: #2e333d;
-    --border: #3a3f4a;
-    --text: #e8eaf0;
-    --muted: #7a8099;
-    --teal: #2dbd9b;
-    --teal-dark: #229e82;
-    --red: #e05555;
-    --yellow: #f0c040;
+    --bg:        #0d1117;
+    --card:      #161b25;
+    --card2:     #1e2535;
+    --border:    #2a3550;
+    --text:      #dde6f5;
+    --muted:     #5a7299;
+    --accent:    #4a9eff;
+    --accent-dk: #2f7de0;
+    --accent-glow: rgba(74,158,255,.25);
+    --red:       #e05566;
+    --yellow:    #f0c040;
     --p1: #4caf50;
     --p2: #c89060;
-    --p3: #4a78c4;
-    --p4: #a0897a;
+    --p3: #4a9eff;
+    --p4: #a07ab0;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,97 +36,88 @@
     align-items: center;
     justify-content: center;
     padding: 16px;
+    background-image: radial-gradient(ellipse at 20% 30%, rgba(74,158,255,.07) 0%, transparent 60%),
+                      radial-gradient(ellipse at 80% 80%, rgba(47,125,224,.05) 0%, transparent 60%);
   }
 
-  /* ── SETUP ── */
+  /* ── LOBBY ── */
   #setupScreen {
-    width: 360px;
+    width: 340px;
     background: var(--card);
-    border-radius: 20px;
-    padding: 36px 28px 28px;
-    box-shadow: 0 12px 48px rgba(0,0,0,.6);
+    border-radius: 22px;
+    padding: 38px 28px 30px;
+    box-shadow: 0 0 0 1px var(--border), 0 20px 60px rgba(0,0,0,.7), 0 0 40px rgba(74,158,255,.06);
   }
   #setupScreen h1 {
     text-align: center;
     font-size: 1.5rem;
     font-weight: 900;
-    letter-spacing: .05em;
-    margin-bottom: 6px;
+    letter-spacing: .06em;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #7dc4ff, #4a9eff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  .subtitle { text-align: center; font-size: .8rem; color: var(--muted); margin-bottom: 24px; }
-
-  #fbConfig {
-    background: var(--card2);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 18px;
+  .subtitle {
+    text-align: center;
+    font-size: .78rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+    letter-spacing: .04em;
   }
-  .fb-title { font-size: .8rem; color: var(--teal); font-weight: 700; margin-bottom: 10px; }
-  #fbConfig input {
-    width: 100%;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: .82rem;
-    color: var(--text);
-    outline: none;
-    margin-bottom: 7px;
-    font-family: monospace;
-  }
-  #fbConfig input:last-of-type { margin-bottom: 0; }
-  #fbConfig input::placeholder { color: var(--muted); }
-  #fbConfig input:focus { border-color: var(--teal); }
-  .fb-hint { font-size: .73rem; color: var(--muted); margin-top: 10px; line-height: 1.6; }
-  .fb-hint a { color: var(--teal); text-decoration: none; }
-  .fb-hint code { color: var(--yellow); }
 
   .input-row { display: flex; gap: 10px; margin-bottom: 12px; }
   .input-row input {
     flex: 1;
-    background: #fff;
-    border: none;
-    border-radius: 10px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 11px;
     padding: 12px 16px;
     font-size: 1rem;
-    color: #222;
+    color: var(--text);
     outline: none;
+    transition: border-color .15s;
+    font-family: 'Noto Sans TC', sans-serif;
   }
-  .input-row input::placeholder { color: #aaa; }
+  .input-row input::placeholder { color: var(--muted); }
+  .input-row input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
 
   .btn {
-    background: var(--teal);
+    background: var(--accent);
     color: #fff;
     border: none;
-    border-radius: 10px;
+    border-radius: 11px;
     padding: 12px 20px;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: background .15s;
+    transition: background .15s, box-shadow .15s;
     white-space: nowrap;
+    font-family: 'Noto Sans TC', sans-serif;
   }
-  .btn:hover { background: var(--teal-dark); }
+  .btn:hover { background: var(--accent-dk); box-shadow: 0 4px 16px var(--accent-glow); }
   .btn.red  { background: var(--red); }
-  .btn.grey { background: #444; }
+  .btn.red:hover { background: #c03a4a; box-shadow: 0 4px 16px rgba(224,85,102,.3); }
+  .btn.grey { background: #2a3550; }
+  .btn.grey:hover { background: #354268; box-shadow: none; }
 
-  .or { text-align: center; color: var(--muted); margin: 4px 0 12px; font-size: .9rem; }
-  .error-msg { color: var(--red); font-size: .85rem; text-align: center; margin-top: 8px; min-height: 1.3em; }
+  .or { text-align: center; color: var(--muted); margin: 4px 0 12px; font-size: .88rem; }
+  .error-msg { color: var(--red); font-size: .84rem; text-align: center; margin-top: 8px; min-height: 1.3em; }
 
   /* ── PASSWORD ── */
   #pwScreen {
     display: none;
-    width: 360px;
+    width: 340px;
     background: var(--card);
-    border-radius: 20px;
-    padding: 32px 28px;
-    box-shadow: 0 12px 48px rgba(0,0,0,.6);
+    border-radius: 22px;
+    padding: 34px 28px;
+    box-shadow: 0 0 0 1px var(--border), 0 20px 60px rgba(0,0,0,.7);
   }
-  .room-badge { text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 20px; }
+  .room-badge { text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 22px; }
   .room-badge em { color: var(--yellow); font-style: normal; }
 
   /* ── GAME ── */
-  #game { display: none; width: 100%; max-width: 620px; }
+  #game { display: none; width: 100%; max-width: 640px; }
 
   .game-header {
     display: flex;
@@ -135,25 +127,28 @@
     background: var(--card);
     border-radius: 14px;
     padding: 10px 14px;
+    border: 1px solid var(--border);
   }
   .back-btn {
     background: var(--red);
     border: none;
-    border-radius: 8px;
+    border-radius: 9px;
     width: 36px; height: 36px;
     color: #fff;
     font-size: 1rem;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
+    transition: opacity .15s;
   }
   .back-btn:hover { opacity: .8; }
   .room-info { flex: 1; font-size: .85rem; color: var(--muted); }
   .room-info strong { color: var(--yellow); font-size: .95rem; }
-  .conn-badge { font-size: .75rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
-  .conn-badge.ok  { background: #1a3d2a; color: var(--teal); }
+  .conn-badge { font-size: .74rem; padding: 4px 10px; border-radius: 20px; font-weight: 700; }
+  .conn-badge.ok  { background: #0d2340; color: var(--accent); }
   .conn-badge.err { background: #3d1a1a; color: var(--red); }
 
+  /* players */
   .players-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
   .player-slot { display: flex; flex-direction: column; align-items: center; gap: 5px; }
   .player-icon {
@@ -162,13 +157,18 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 1.5rem;
     border: 2px solid transparent;
-    transition: opacity .3s;
+    transition: opacity .3s, transform .15s;
   }
-  .player-icon.me { border-color: var(--yellow) !important; box-shadow: 0 0 12px rgba(240,192,64,.35); }
+  .player-icon.me {
+    border-color: var(--yellow) !important;
+    box-shadow: 0 0 14px rgba(240,192,64,.4);
+    transform: scale(1.08);
+  }
   .player-icon.online  { opacity: 1; }
-  .player-icon.offline { opacity: .3; }
-  .player-label { font-size: .7rem; }
+  .player-icon.offline { opacity: .25; }
+  .player-label { font-size: .7rem; font-weight: 700; }
 
+  /* config bar */
   .config-bar {
     display: flex; gap: 8px; align-items: center;
     margin-bottom: 12px;
@@ -176,6 +176,7 @@
     border-radius: 12px;
     padding: 10px 14px;
     flex-wrap: wrap;
+    border: 1px solid var(--border);
   }
   .config-bar label { font-size: .85rem; color: var(--muted); flex-shrink: 0; }
   .config-bar input[type=number] {
@@ -188,59 +189,76 @@
     font-size: .9rem;
     outline: none;
     text-align: center;
+    font-family: 'Noto Sans TC', sans-serif;
   }
-  .config-bar input:focus { border-color: var(--teal); }
+  .config-bar input:focus { border-color: var(--accent); }
   .config-bar .btn { padding: 6px 14px; font-size: .85rem; }
 
-  .grid-wrap { background: var(--card); border-radius: 14px; padding: 14px 12px; }
+  /* grid */
+  .grid-wrap {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 14px 12px;
+    border: 1px solid var(--border);
+  }
   .grid-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
   .grid-row:last-child { margin-bottom: 0; }
   .row-label { width: 24px; text-align: center; font-size: .9rem; font-weight: 700; color: var(--muted); flex-shrink: 0; }
 
   .cell {
     flex: 1;
-    height: 48px;
-    border-radius: 10px;
+    height: 50px;
+    border-radius: 11px;
     background: var(--card2);
     display: flex; align-items: center; justify-content: center;
     font-size: 1rem; font-weight: 700;
-    color: rgba(255,255,255,.2);
+    color: rgba(255,255,255,.18);
     cursor: pointer;
-    transition: background .15s, transform .1s, box-shadow .15s;
+    transition: background .15s, transform .1s, box-shadow .15s, border-color .15s;
     user-select: none;
     border: 2px solid transparent;
     -webkit-tap-highlight-color: transparent;
   }
-  .cell:hover  { transform: scale(1.06); border-color: rgba(255,255,255,.08); }
-  .cell:active { transform: scale(.94); }
+  .cell:hover  { transform: scale(1.06); border-color: rgba(74,158,255,.2); }
+  .cell:active { transform: scale(.93); }
 
-  .cell[data-owner="1"]       { background: #1e5220; color: #fff; }
-  .cell[data-owner="2"]       { background: #6a3e1a; color: #fff; }
-  .cell[data-owner="3"]       { background: #1a3470; color: #fff; }
-  .cell[data-owner="4"]       { background: #4a3428; color: #fff; }
-  .cell[data-owner="1"].mine  { background: var(--p1); box-shadow: 0 0 10px #4caf5066; }
-  .cell[data-owner="2"].mine  { background: var(--p2); box-shadow: 0 0 10px #c8906066; }
-  .cell[data-owner="3"].mine  { background: var(--p3); box-shadow: 0 0 10px #4a78c466; }
-  .cell[data-owner="4"].mine  { background: var(--p4); box-shadow: 0 0 10px #a0897a66; }
+  /* teammate colours (dim) */
+  .cell[data-owner="1"]      { background: #173320; color: #aee8b0; }
+  .cell[data-owner="2"]      { background: #3a2510; color: #e8c898; }
+  .cell[data-owner="3"]      { background: #0e2445; color: #90c4ff; }
+  .cell[data-owner="4"]      { background: #2e1e38; color: #c8a8e0; }
+
+  /* my own cells (bright) */
+  .cell[data-owner="1"].mine { background: var(--p1); color: #fff; box-shadow: 0 0 12px #4caf5060; border-color: #4caf5080; }
+  .cell[data-owner="2"].mine { background: var(--p2); color: #fff; box-shadow: 0 0 12px #c8906060; border-color: #c8906080; }
+  .cell[data-owner="3"].mine { background: var(--p3); color: #fff; box-shadow: 0 0 12px #4a9eff60; border-color: #4a9eff80; }
+  .cell[data-owner="4"].mine { background: var(--p4); color: #fff; box-shadow: 0 0 12px #a07ab060; border-color: #a07ab080; }
 
   .status-bar { text-align: center; font-size: .78rem; color: var(--muted); margin-top: 10px; height: 1.4em; }
-  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--teal); margin-right: 5px; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 5px; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.15} }
 
+  /* loading */
   #loadingOverlay {
     display: none;
     position: fixed; inset: 0;
-    background: rgba(26,29,35,.85);
+    background: rgba(13,17,23,.88);
     z-index: 999;
     align-items: center;
     justify-content: center;
     flex-direction: column;
     gap: 14px;
-    font-size: 1rem;
+    font-size: .95rem;
     color: var(--muted);
   }
   #loadingOverlay.show { display: flex; }
-  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin .7s linear infinite; }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -248,23 +266,10 @@
 
 <div id="loadingOverlay"><div class="spinner"></div><span id="loadingMsg">連線中…</span></div>
 
-<!-- SETUP -->
+<!-- LOBBY -->
 <div id="setupScreen">
-  <h1>組隊小工具 <sup style="color:var(--teal);font-size:.55em">v2.0</sup></h1>
-  <p class="subtitle">Firebase 即時跨裝置同步</p>
-
-  <div id="fbConfig">
-    <div class="fb-title">🔥 Firebase 設定（只需填一次）</div>
-    <input id="fbApiKey"    placeholder="apiKey"    autocomplete="off">
-    <input id="fbProjectId" placeholder="projectId" autocomplete="off">
-    <input id="fbDbUrl"     placeholder="databaseURL  （https://你的專案-default-rtdb.firebaseio.com）" autocomplete="off">
-    <div class="fb-hint">
-      ① 至 <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> 建立專案<br>
-      ② 啟用 <b>Realtime Database</b>，選擇測試模式<br>
-      ③ 進入「專案設定」複製 apiKey、projectId、databaseURL<br>
-      ④ 規則設為 <code>".read": true, ".write": true</code>
-    </div>
-  </div>
+  <h1>組隊小工具</h1>
+  <p class="subtitle">即時跨裝置同步 · v2.0</p>
 
   <div class="input-row">
     <input id="joinRoomInput" type="text" placeholder="輸入房號" maxlength="8">
@@ -295,7 +300,7 @@
     <button class="back-btn" onclick="doLeave()">←</button>
     <div class="room-info">
       房號 <strong id="gameRoomNum"></strong>
-      &nbsp;|&nbsp; 你是玩家 <strong id="myPidDisplay" style="color:var(--teal)"></strong>
+      &nbsp;|&nbsp; 你是玩家 <strong id="myPidDisplay" style="color:var(--accent)"></strong>
     </div>
     <div class="conn-badge ok" id="connBadge">● 已連線</div>
   </div>
@@ -322,60 +327,55 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
-const COLORS        = ['#4caf50','#c89060','#4a78c4','#a0897a'];
-const PLAYER_EMOJI  = ['😀','😎','🤖','👾'];
+// ── Firebase config (hardcoded, not shown in UI) ──
+const FB_CONFIG = {
+  apiKey:      'kBWI7U5IuYyuNECvCbe8Gr3EsABjrZ0sJwfAC84Y',
+  authDomain:  'yoyoyo-393d3.firebaseapp.com',
+  projectId:   'yoyoyo-393d3',
+  databaseURL: 'https://yoyoyo-393d3-default-rtdb.firebaseio.com'
+};
+
+const COLORS       = ['#4caf50','#c89060','#4a9eff','#a07ab0'];
+const PLAYER_EMOJI = ['😀','😎','🤖','👾'];
 const PING_INTERVAL = 4000;
 const OFFLINE_AFTER = 12000;
 
-let firebaseApp  = null;
-let db           = null;
-let roomRef      = null;
-let listeners    = [];
-let myRoom       = null;
-let myPlayer     = null;
+let firebaseApp   = null;
+let db            = null;
+let roomRef       = null;
+let listeners     = [];
+let myRoom        = null;
+let myPlayer      = null;
 let rows = 5, cols = 4;
-let gridState    = [];
-let onlinePlayers= {};
-let pingTimer    = null;
+let gridState     = [];
+let onlinePlayers = {};
+let pingTimer     = null;
 
 const $ = id => document.getElementById(id);
 
-// ── Loading ──
+// Auto-init Firebase on page load
+window.addEventListener('DOMContentLoaded', () => { ensureFirebase(); });
+
 function showLoading(msg='連線中…'){ $('loadingMsg').textContent=msg; $('loadingOverlay').classList.add('show'); }
 function hideLoading(){ $('loadingOverlay').classList.remove('show'); }
-
 function makeGrid(r,c){ return Array.from({length:r},()=>Array(c).fill(0)); }
 
-// ── Persist Firebase creds ──
-function saveCreds(){
-  localStorage.setItem('fb_k', $('fbApiKey').value.trim());
-  localStorage.setItem('fb_p', $('fbProjectId').value.trim());
-  localStorage.setItem('fb_d', $('fbDbUrl').value.trim());
-}
-function loadCreds(){
-  $('fbApiKey').value    = localStorage.getItem('fb_k')||'';
-  $('fbProjectId').value = localStorage.getItem('fb_p')||'';
-  $('fbDbUrl').value     = localStorage.getItem('fb_d')||'';
-}
-
-// ── Init Firebase ──
-function initFirebase(){
-  const apiKey    = $('fbApiKey').value.trim();
-  const projectId = $('fbProjectId').value.trim();
-  const dbUrl     = $('fbDbUrl').value.trim();
-  if(!apiKey||!projectId||!dbUrl){
-    $('setupErr').textContent='請填入 Firebase apiKey、projectId、databaseURL';
-    return false;
-  }
+// ── Init Firebase once (safe re-init) ──
+function ensureFirebase(){
+  if(db) return true;
   try{
-    // Delete old app to allow re-init with new config
-    if(firebaseApp){ try{ firebaseApp.delete(); }catch(e){} }
-    firebaseApp = firebase.initializeApp({apiKey,projectId,databaseURL:dbUrl},'tt_'+Date.now());
+    // Check if already initialized to avoid duplicate-app error
+    const existing = firebase.apps.find(a => a.name === 'teamtool');
+    if(existing){
+      firebaseApp = existing;
+    } else {
+      firebaseApp = firebase.initializeApp(FB_CONFIG, 'teamtool');
+    }
     db = firebase.database(firebaseApp);
-    saveCreds();
     return true;
   }catch(e){
-    $('setupErr').textContent='Firebase 初始化失敗：'+e.message;
+    $('setupErr').textContent = 'Firebase 連線失敗：'+e.message;
+    console.error('Firebase init error:', e);
     return false;
   }
 }
@@ -383,15 +383,15 @@ function initFirebase(){
 // ── Create room ──
 async function doCreate(){
   $('setupErr').textContent='';
-  if(!initFirebase()) return;
+  if(!ensureFirebase()) return;
   showLoading('建立房間…');
   const pw      = $('createPwInput').value.trim();
   const roomNum = Math.floor(100000+Math.random()*900000).toString();
-  const init = { pw, rows:5, cols:4, grid:makeGrid(5,4), players:{} };
+  const init    = { pw, rows:5, cols:4, grid:makeGrid(5,4), players:{} };
   try{
     await db.ref('rooms/'+roomNum).set(init);
     hideLoading();
-    enterGame(roomNum,1);
+    enterGame(roomNum, 1);
   }catch(e){
     hideLoading();
     $('setupErr').textContent='建立失敗：'+e.message;
@@ -403,7 +403,7 @@ async function doJoin(){
   $('setupErr').textContent='';
   const room = $('joinRoomInput').value.trim();
   if(!room){ $('setupErr').textContent='請輸入房號'; return; }
-  if(!initFirebase()) return;
+  if(!ensureFirebase()) return;
   showLoading('查詢房間…');
   try{
     const snap = await db.ref('rooms/'+room).once('value');
@@ -449,48 +449,37 @@ async function doPwSubmit(){
 async function assignAndEnter(room, data){
   const now    = Date.now();
   const taken  = Object.keys(data.players||{}).map(Number);
-  // Filter out stale presence (> OFFLINE_AFTER)
-  const active = taken.filter(p => data.players[p] && (now - data.players[p]) < OFFLINE_AFTER);
-  let pid = 1;
+  const active = taken.filter(p => data.players[p] && (now-data.players[p])<OFFLINE_AFTER);
+  let pid=1;
   for(let i=1;i<=4;i++){ if(!active.includes(i)){ pid=i; break; } }
   enterGame(room, pid);
 }
 
 // ── Enter game ──
 function enterGame(room, pid){
-  myRoom   = room;
-  myPlayer = pid;
-  roomRef  = db.ref('rooms/'+room);
-
+  myRoom=room; myPlayer=pid;
+  roomRef = db.ref('rooms/'+room);
   showLoading('載入房間…');
   roomRef.once('value').then(snap=>{
     hideLoading();
     const data = snap.val()||{};
-    rows = data.rows||5;
-    cols = data.cols||4;
+    rows = data.rows||5; cols = data.cols||4;
     gridState = data.grid
       ? Object.values(data.grid).map(r=>Object.values(r))
       : makeGrid(rows,cols);
-
-    $('cfgRows').value = rows;
-    $('cfgCols').value = cols;
+    $('cfgRows').value=rows; $('cfgCols').value=cols;
     $('setupScreen').style.display='none';
     $('pwScreen').style.display='none';
     $('game').style.display='block';
-    $('gameRoomNum').textContent  = room;
-    $('myPidDisplay').textContent = pid;
+    $('gameRoomNum').textContent=room;
+    $('myPidDisplay').textContent=pid;
+    renderPlayers(); renderGrid(); attachListeners();
 
-    renderPlayers();
-    renderGrid();
-    attachListeners();
-
-    // Presence
     const presRef = db.ref('rooms/'+room+'/players/'+pid);
     presRef.set(Date.now());
     presRef.onDisconnect().remove();
     if(pingTimer) clearInterval(pingTimer);
     pingTimer = setInterval(()=>presRef.set(Date.now()), PING_INTERVAL);
-
   }).catch(e=>{
     hideLoading();
     $('setupErr').textContent='載入失敗：'+e.message;
@@ -502,56 +491,40 @@ function enterGame(room, pid){
 function attachListeners(){
   detachListeners();
 
-  // Grid
   const gRef = roomRef.child('grid');
   const gFn  = snap=>{
-    const raw = snap.val();
-    if(!raw) return;
-    gridState = Object.values(raw).map(r=>Object.values(r));
+    const raw=snap.val(); if(!raw) return;
+    gridState=Object.values(raw).map(r=>Object.values(r));
     renderGrid();
   };
-  gRef.on('value', gFn);
-  listeners.push({ref:gRef, event:'value', fn:gFn});
+  gRef.on('value',gFn);
+  listeners.push({ref:gRef,event:'value',fn:gFn});
 
-  // rows/cols
-  const rowsFn = snap=>{ if(snap.val()){ rows=snap.val(); $('cfgRows').value=rows; } };
-  const colsFn = snap=>{ if(snap.val()){ cols=snap.val(); $('cfgCols').value=cols; } };
-  roomRef.child('rows').on('value', rowsFn);
-  roomRef.child('cols').on('value', colsFn);
-  listeners.push({ref:roomRef.child('rows'), event:'value', fn:rowsFn});
-  listeners.push({ref:roomRef.child('cols'), event:'value', fn:colsFn});
+  const rowsFn=snap=>{ if(snap.val()){ rows=snap.val(); $('cfgRows').value=rows; } };
+  const colsFn=snap=>{ if(snap.val()){ cols=snap.val(); $('cfgCols').value=cols; } };
+  roomRef.child('rows').on('value',rowsFn);
+  roomRef.child('cols').on('value',colsFn);
+  listeners.push({ref:roomRef.child('rows'),event:'value',fn:rowsFn});
+  listeners.push({ref:roomRef.child('cols'),event:'value',fn:colsFn});
 
-  // Players presence
-  const pRef = roomRef.child('players');
-  const pFn  = snap=>{ onlinePlayers = snap.val()||{}; renderPlayers(); };
-  pRef.on('value', pFn);
-  listeners.push({ref:pRef, event:'value', fn:pFn});
+  const pRef=roomRef.child('players');
+  const pFn =snap=>{ onlinePlayers=snap.val()||{}; renderPlayers(); };
+  pRef.on('value',pFn);
+  listeners.push({ref:pRef,event:'value',fn:pFn});
 
-  // Connection status
-  db.ref('.info/connected').on('value', snap=>{
-    const badge = $('connBadge');
-    if(snap.val()){
-      badge.textContent='● 已連線'; badge.className='conn-badge ok';
-      $('statusBar').innerHTML='<span class="dot"></span>即時同步中';
-    }else{
-      badge.textContent='● 已離線'; badge.className='conn-badge err';
-      $('statusBar').textContent='連線中斷，等待重連…';
-    }
+  db.ref('.info/connected').on('value',snap=>{
+    const b=$('connBadge');
+    if(snap.val()){ b.textContent='● 已連線'; b.className='conn-badge ok'; $('statusBar').innerHTML='<span class="dot"></span>即時同步中'; }
+    else           { b.textContent='● 已離線'; b.className='conn-badge err'; $('statusBar').textContent='連線中斷，等待重連…'; }
   });
 }
-
-function detachListeners(){
-  listeners.forEach(({ref,event,fn})=>ref.off(event,fn));
-  listeners=[];
-}
+function detachListeners(){ listeners.forEach(({ref,event,fn})=>ref.off(event,fn)); listeners=[]; }
 
 // ── Leave ──
 async function doLeave(){
   if(pingTimer) clearInterval(pingTimer);
   detachListeners();
-  if(roomRef && myPlayer){
-    await roomRef.child('players/'+myPlayer).remove().catch(()=>{});
-  }
+  if(roomRef&&myPlayer) await roomRef.child('players/'+myPlayer).remove().catch(()=>{});
   $('game').style.display='none';
   $('setupScreen').style.display='block';
   myRoom=null; myPlayer=null; roomRef=null;
@@ -559,50 +532,37 @@ async function doLeave(){
 
 // ── Cell click ──
 function cellClick(r,c){
-  const cur = (gridState[r]&&gridState[r][c])||0;
-  const newVal = (cur===myPlayer) ? 0 : (cur===0 ? myPlayer : null);
+  const cur=(gridState[r]&&gridState[r][c])||0;
+  const newVal=(cur===myPlayer)?0:(cur===0?myPlayer:null);
   if(newVal===null) return;
   if(!gridState[r]) gridState[r]=[];
-  gridState[r][c] = newVal;
+  gridState[r][c]=newVal;
   renderGrid();
-  roomRef.child(`grid/${r}/${c}`).set(newVal).catch(e=>{
-    $('statusBar').textContent='同步失敗：'+e.message;
-  });
+  roomRef.child(`grid/${r}/${c}`).set(newVal).catch(e=>{ $('statusBar').textContent='同步失敗：'+e.message; });
 }
 
-// ── Config ──
 function applyConfig(){
-  const r = Math.max(1,Math.min(20,parseInt($('cfgRows').value)||5));
-  const c = Math.max(1,Math.min(10,parseInt($('cfgCols').value)||4));
-  rows=r; cols=c;
-  gridState = makeGrid(r,c);
-  renderGrid();
-  roomRef.update({rows:r, cols:c, grid:gridState}).catch(()=>{});
+  const r=Math.max(1,Math.min(20,parseInt($('cfgRows').value)||5));
+  const c=Math.max(1,Math.min(10,parseInt($('cfgCols').value)||4));
+  rows=r; cols=c; gridState=makeGrid(r,c); renderGrid();
+  roomRef.update({rows:r,cols:c,grid:gridState}).catch(()=>{});
 }
 function clearAll(){
-  gridState = makeGrid(rows,cols);
-  renderGrid();
+  gridState=makeGrid(rows,cols); renderGrid();
   roomRef.child('grid').set(gridState).catch(()=>{});
 }
 
 // ── Render grid ──
 function renderGrid(){
-  const container = $('gridContainer');
-  container.innerHTML='';
+  const container=$('gridContainer'); container.innerHTML='';
   for(let r=rows-1;r>=0;r--){
-    const rowEl = document.createElement('div');
-    rowEl.className = 'grid-row';
-    const lbl = document.createElement('div');
-    lbl.className='row-label'; lbl.textContent=r+1;
+    const rowEl=document.createElement('div'); rowEl.className='grid-row';
+    const lbl=document.createElement('div'); lbl.className='row-label'; lbl.textContent=r+1;
     rowEl.appendChild(lbl);
     for(let c=0;c<cols;c++){
-      const cell = document.createElement('div');
-      cell.className='cell'; cell.textContent=c+1;
-      const owner = (gridState[r]&&gridState[r][c])||0;
-      if(owner){
-        cell.dataset.owner=owner;
-        if(owner===myPlayer) cell.classList.add('mine');
-      }
+      const cell=document.createElement('div'); cell.className='cell'; cell.textContent=c+1;
+      const owner=(gridState[r]&&gridState[r][c])||0;
+      if(owner){ cell.dataset.owner=owner; if(owner===myPlayer) cell.classList.add('mine'); }
       cell.onclick=()=>cellClick(r,c);
       rowEl.appendChild(cell);
     }
@@ -612,32 +572,22 @@ function renderGrid(){
 
 // ── Render players ──
 function renderPlayers(){
-  const row = $('playersRow');
-  row.innerHTML='';
-  const now = Date.now();
+  const row=$('playersRow'); row.innerHTML='';
+  const now=Date.now();
   for(let p=1;p<=4;p++){
-    const slot = document.createElement('div');
-    slot.className='player-slot';
-    const icon = document.createElement('div');
-    icon.className='player-icon';
-    icon.style.background = COLORS[p-1]+'33';
-    icon.style.borderColor= COLORS[p-1];
-    icon.style.border = `2px solid ${COLORS[p-1]}`;
-    icon.textContent = PLAYER_EMOJI[p-1];
-    const last = onlinePlayers[p];
+    const slot=document.createElement('div'); slot.className='player-slot';
+    const icon=document.createElement('div'); icon.className='player-icon';
+    icon.style.background=COLORS[p-1]+'30';
+    icon.style.border=`2px solid ${COLORS[p-1]}`;
+    icon.textContent=PLAYER_EMOJI[p-1];
+    const last=onlinePlayers[p];
     icon.classList.add((last&&(now-last)<OFFLINE_AFTER)?'online':'offline');
     if(p===myPlayer) icon.classList.add('me');
-    const lbl = document.createElement('div');
-    lbl.className='player-label';
-    lbl.textContent=`P${p}`;
-    lbl.style.color=COLORS[p-1];
-    slot.append(icon,lbl);
-    row.appendChild(slot);
+    const lbl=document.createElement('div'); lbl.className='player-label';
+    lbl.textContent=`P${p}`; lbl.style.color=COLORS[p-1];
+    slot.append(icon,lbl); row.appendChild(slot);
   }
 }
-
-// Init
-loadCreds();
 </script>
 </body>
 </html>
