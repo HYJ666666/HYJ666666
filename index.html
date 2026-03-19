@@ -528,53 +528,63 @@ async function doPwSubmit(){
 }
 
 async function assignAndEnter(room, data){
-  // Show player selection screen instead of auto-assigning
-  showPlayerSelect(room, data);
+  await showPlayerSelect(room);
 }
 
-function showPlayerSelect(room, data){
+// 即時從 Firebase 讀取目前在線玩家，再顯示選擇畫面
+async function showPlayerSelect(room){
   const NAMES  = ['玩家 1','玩家 2','玩家 3','玩家 4'];
   const COLBG  = ['#173320','#3a2510','#0e2445','#2e1e38'];
   const COLBDR = ['#4caf50','#c89060','#4a9eff','#a07ab0'];
+  const EMOJI  = ['😀','😎','🤖','👾'];
 
   $('setupScreen').style.display='none';
   $('pwScreen').style.display='none';
   $('psRoomNum').textContent = room;
   $('psErr').textContent = '';
-
-  const now    = Date.now();
-  const players = data.players || {};
-  // who is actively online
-  const active = Object.keys(players).map(Number).filter(p => players[p] && (now - players[p]) < OFFLINE_AFTER);
+  $('playerSelectScreen').style.display='block';
 
   const grid = $('playerPickGrid');
+  grid.innerHTML = '<div style="color:var(--muted);text-align:center;grid-column:1/-1;padding:10px">載入中…</div>';
+
+  // ★ 每次都即時讀取 Firebase 最新狀態
+  let liveData = {};
+  try{
+    const snap = await db.ref('rooms/'+room+'/players').once('value');
+    liveData = snap.val() || {};
+  }catch(e){ /* ignore, treat all as free */ }
+
+  const now    = Date.now();
+  // 只有心跳在 OFFLINE_AFTER 內才算「使用中」
+  const active = Object.keys(liveData).map(Number)
+    .filter(p => liveData[p] && (now - liveData[p]) < OFFLINE_AFTER);
+
   grid.innerHTML = '';
 
   for(let p=1; p<=4; p++){
     const isTaken = active.includes(p);
     const btn = document.createElement('div');
+    // ★ 所有格子都可點，不鎖定「使用中」的格子（允許同一玩家多裝置或朋友覆蓋）
     btn.className = 'player-pick-btn' + (isTaken ? ' taken' : '');
-    btn.style.borderColor = isTaken ? 'var(--border)' : COLBDR[p-1];
-    btn.style.background  = isTaken ? 'var(--card2)' : COLBG[p-1];
-    if(!isTaken) btn.style.boxShadow = `0 0 16px ${COLBDR[p-1]}33`;
+    btn.style.borderColor = COLBDR[p-1];
+    btn.style.background  = COLBG[p-1];
+    btn.style.boxShadow   = `0 0 16px ${COLBDR[p-1]}33`;
 
     btn.innerHTML = `
       ${isTaken ? '<span class="taken-badge">使用中</span>' : ''}
-      <span class="pick-emoji">${['😀','😎','🤖','👾'][p-1]}</span>
+      <span class="pick-emoji">${EMOJI[p-1]}</span>
       <span class="pick-name" style="color:${COLBDR[p-1]}">${NAMES[p-1]}</span>
-      <span class="pick-status">${isTaken ? '已有人使用' : '點選加入'}</span>
+      <span class="pick-status">${isTaken ? '已有人加入' : '點選加入'}</span>
     `;
 
-    if(!isTaken){
-      btn.onclick = () => {
-        $('playerSelectScreen').style.display='none';
-        enterGame(room, p);
-      };
-    }
+    // ★ 全部都可以點（使用中的只是提示，不阻擋）
+    btn.onclick = () => {
+      $('playerSelectScreen').style.display='none';
+      enterGame(room, p);
+    };
+
     grid.appendChild(btn);
   }
-
-  $('playerSelectScreen').style.display='block';
 }
 
 // ── Enter game ──
