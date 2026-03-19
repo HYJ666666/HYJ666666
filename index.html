@@ -471,7 +471,7 @@ async function doCreate(){
     await db.ref('rooms/'+roomNum).set(init);
     hideLoading();
     myRoom = roomNum;
-    showPlayerSelect(roomNum, init);
+    await showPlayerSelect(roomNum);
   }catch(e){
     hideLoading();
     $('setupErr').textContent='建立失敗：'+e.message;
